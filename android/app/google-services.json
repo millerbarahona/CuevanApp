@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "276391872405",
+    "project_id": "cuevanapp-507c4",
+    "storage_bucket": "cuevanapp-507c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276391872405:android:1520009ec15a2c6058189c",
+        "android_client_info": {
+          "package_name": "com.example.cuevan_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276391872405-m9bohqbl8vsbah8m9tnal4vtf4mo9hoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cuevan_app",
+            "certificate_hash": "34c97f6916d0cfc9805001872befbc57217d9c18"
+          }
+        },
+        {
+          "client_id": "276391872405-pmued4494ra0gea8vpb138nksb2q7m2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_CiYxemmvzVEZzIRYXQTRPmE4poVEmF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276391872405-pmued4494ra0gea8vpb138nksb2q7m2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
