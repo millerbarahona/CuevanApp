@@ -1,3 +1,4 @@
+import 'package:cuevan_app/router/app_routes.dart';
 import 'package:cuevan_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       home: const LoginScreen(),
+      initialRoute: AppRoutes.initialRoute,
+      routes: AppRoutes.getRoutes(),
     );
   }
 }
