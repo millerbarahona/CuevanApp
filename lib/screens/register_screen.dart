@@ -61,9 +61,10 @@ class _RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<_RegisterForm> {
+  final formKey = GlobalKey<FormState>();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   DateTime _selectedDate = DateTime.now();
-  String? _surname;
+  String? _surname = '';
   String? _name;
   String? _email;
   String? _password;
@@ -71,6 +72,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         children: [
           Row(
@@ -93,9 +95,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                   child: InputField(
                     hintText: 'Surname',
                     obscureText: false,
-                    onSaved: (String? value) {
-                      value = _surname;
-                    },
+                    onChanged: (value) => setState(() => _surname = value),
                   ),
                 ),
               ),
@@ -152,6 +152,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                   elevation: MaterialStateProperty.all(0)),
               child: const Text('Register'),
               onPressed: () async {
+                formKey.currentState?.save();
                 print('este es el email `$_email`');
                 await users.add(
                   {

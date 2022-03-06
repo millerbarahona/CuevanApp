@@ -7,7 +7,9 @@ class InputField extends StatelessWidget {
       this.sufixIcon,
       required this.obscureText,
       this.validator,
-      this.onSaved})
+      this.onSaved,
+      this.onChanged,
+      this.keyboardType})
       : super(key: key);
 
   final String hintText;
@@ -15,7 +17,8 @@ class InputField extends StatelessWidget {
   final bool obscureText;
   final FormFieldSetter<String>? onSaved;
   final FormFieldValidator<String>? validator;
-
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
