@@ -1,4 +1,3 @@
-import 'package:cuevan_app/widgets/divider.dart';
 import 'package:cuevan_app/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -39,6 +38,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.pushNamed(context, 'register');
+                        FocusScope.of(context).unfocus();
                       },
                       style: ButtonStyle(         
                         shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
@@ -84,7 +84,7 @@ class _LoginForm extends StatelessWidget {
                 height: 50,
               ),
               onPressed: () {
-
+                
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(const Color(0xffa239f1)),

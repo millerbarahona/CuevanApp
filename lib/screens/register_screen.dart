@@ -24,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     margin: const EdgeInsets.only(top: 20, bottom: 10),
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
                       child: const Icon(Icons.arrow_back_rounded, size: 45),
                     )
                   ),
