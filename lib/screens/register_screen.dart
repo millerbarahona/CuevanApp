@@ -1,4 +1,5 @@
 import 'package:cuevan_app/widgets/input_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -63,11 +64,14 @@ class _RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<_RegisterForm> {
   final formKey = GlobalKey<FormState>();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  DateTime _selectedDate = DateTime.now();
-  String? _surname = '';
-  String? _name;
-  String? _email;
-  String? _password;
+
+  Map<String, dynamic> formValues = {
+    'selectedDate': DateTime.now(),
+    'surname': '',
+    'name': '',
+    'email': '',
+    'password': ''
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     hintText: 'Name',
                     obscureText: false,
                     onSaved: (String? value) {
-                      value = _name;
+                      formValues['name'] = value;
                     },
                   ),
                 ),
@@ -95,7 +99,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                   child: InputField(
                     hintText: 'Surname',
                     obscureText: false,
-                    onChanged: (value) => setState(() => _surname = value),
+                    onSaved: (String? value) {
+                      formValues['surname'] = value;
+                    },
                   ),
                 ),
               ),
@@ -107,7 +113,7 @@ class _RegisterFormState extends State<_RegisterForm> {
               hintText: 'Email',
               obscureText: false,
               onSaved: (String? value) {
-                value = _email;
+                formValues['email'] = value;
               },
             ),
           ),
@@ -117,7 +123,7 @@ class _RegisterFormState extends State<_RegisterForm> {
               hintText: 'Password',
               obscureText: true,
               onSaved: (String? value) {
-                value = _password;
+                formValues['password'] = value;
               },
             ),
           ),
@@ -153,22 +159,54 @@ class _RegisterFormState extends State<_RegisterForm> {
               child: const Text('Register'),
               onPressed: () async {
                 formKey.currentState?.save();
-                print('este es el email `$_email`');
                 await users.add(
                   {
-                    'name': _name,
-                    'surname': _surname,
-                    'email': _email,
-                    'password': _password,
-                    'birthdate': _selectedDate,
+                    'name': formValues['name'],
+                    'surname': formValues['surname'],
+                    'email': formValues['email'],
+                    'password': formValues['password'],
+                    'birthdate': formValues['selectedDate'],
                   },
-                ).then((value) => print(_email));
+                ).then((value) => print(value));
               },
             ),
           )
         ],
       ),
     );
+  }
+
+  Future _signUp(String email1, String password1) async { //metodo para el register
+    FocusScope.of(context).unfocus();
+    try{
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email1,
+      password: password1
+    ).then((value) => print(value)); //usercredentials
+    } on FirebaseAuthException catch( exception ) {
+      print(exception.code);
+      switch (exception.code){
+        case 'email-already-in-use': //show alertDialog cuando el email ya esté en uso
+          _presentAlertDialog(title: 'Correo en uso', content: 'Este correo ya está en uso, usa uno distinto. 😢');
+          break;
+        case 'weak-password':
+          _presentAlertDialog(title: 'Contraseña demasiado facil', content: 'La contraseña debe contener por lo menos 6 caracteres.');
+          break;
+      }
+    }
+  }
+
+  void _presentAlertDialog({ required String title, required String content}) {
+    showDialog(context: context, builder: (BuildContext _) => AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Ok')
+        )
+      ],
+    ));
   }
 
   void _presentDatePicker() {
@@ -182,7 +220,7 @@ class _RegisterFormState extends State<_RegisterForm> {
         return;
       }
       setState(() {
-        _selectedDate = pickedDate;
+        formValues['selectedDate'] = pickedDate;
       });
     });
   }
