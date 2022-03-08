@@ -158,7 +158,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                   elevation: MaterialStateProperty.all(0)),
               child: const Text('Register'),
               onPressed: () async {
-                formKey.currentState?.save();
+                print(formValues['name']);
                 await users.add(
                   {
                     'name': formValues['name'],
@@ -176,37 +176,43 @@ class _RegisterFormState extends State<_RegisterForm> {
     );
   }
 
-  Future _signUp(String email1, String password1) async { //metodo para el register
+  Future _signUp(String email1, String password1) async {
+    //metodo para el register
     FocusScope.of(context).unfocus();
-    try{
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email1,
-      password: password1
-    ).then((value) => print(value)); //usercredentials
-    } on FirebaseAuthException catch( exception ) {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email1, password: password1)
+          .then((value) => print(value)); //usercredentials
+    } on FirebaseAuthException catch (exception) {
       print(exception.code);
-      switch (exception.code){
+      switch (exception.code) {
         case 'email-already-in-use': //show alertDialog cuando el email ya esté en uso
-          _presentAlertDialog(title: 'Correo en uso', content: 'Este correo ya está en uso, usa uno distinto. 😢');
+          _presentAlertDialog(
+              title: 'Correo en uso',
+              content: 'Este correo ya está en uso, usa uno distinto. 😢');
           break;
         case 'weak-password':
-          _presentAlertDialog(title: 'Contraseña demasiado facil', content: 'La contraseña debe contener por lo menos 6 caracteres.');
+          _presentAlertDialog(
+              title: 'Contraseña demasiado facil',
+              content:
+                  'La contraseña debe contener por lo menos 6 caracteres.');
           break;
       }
     }
   }
 
-  void _presentAlertDialog({ required String title, required String content}) {
-    showDialog(context: context, builder: (BuildContext _) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'Cancel'),
-          child: const Text('Ok')
-        )
-      ],
-    ));
+  void _presentAlertDialog({required String title, required String content}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext _) => AlertDialog(
+              title: Text(title),
+              content: Text(content),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Ok'))
+              ],
+            ));
   }
 
   void _presentDatePicker() {
