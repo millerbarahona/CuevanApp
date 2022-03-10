@@ -36,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Container(
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: const Text('Register',
+                  child: const Text('Register ✨',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

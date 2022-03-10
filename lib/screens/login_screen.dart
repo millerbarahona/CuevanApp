@@ -125,7 +125,8 @@ class _LoginFormState extends State<_LoginForm> {
               onPressed: () async {
                 formKey.currentState?.save();
                 print(formValues['email']);
-                await _signIn(formValues['email'], formValues['password']);
+                //await _signIn(formValues['email'], formValues['password']);
+                Navigator.pushNamed(context, 'admin_home');
               },
               style: ButtonStyle(
                   backgroundColor:
