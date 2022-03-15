@@ -154,8 +154,8 @@ class _LoginFormState extends State<_LoginForm> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email1, password: password1
               // ignore: avoid_print
-              )
-          .then((value) => print(value)); //usercredentials
+              );
+      Navigator.pushNamed(context, 'home_page'); //usercredentials
     } on FirebaseAuthException catch (exception) {
       print(exception.code);
       switch (exception.code) {
