@@ -1,16 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 
-class UserModel {
-  final String? name;
-  final String? surname;
-  final String? email;
-  final String? password;
-  final DateTime? birthdate;
+class User {
+  User({
+    required this.id,
+    required this.nombre,
+    required this.fechaNacimiento,
+    required this.correo,
+    required this.rol,
+    required this.firebaseUid,
+  });
 
-  UserModel(
-      {required this.name,
-      required this.surname,
-      required this.email,
-      required this.password,
-      required this.birthdate});
+  int id;
+  String nombre;
+  DateTime fechaNacimiento;
+  String correo;
+  String rol;
+  String firebaseUid;
+
+  factory User.fromJson(String str) => User.fromMap(json.decode(str));
+
+  factory User.fromMap(Map<String, dynamic> json) => User(
+        id: json["id"],
+        nombre: json["nombre"],
+        fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
+        correo: json["correo"],
+        rol: json["rol"],
+        firebaseUid: json["firebase_uid"],
+      );
 }
