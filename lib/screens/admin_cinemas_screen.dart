@@ -1,69 +1,29 @@
+import 'package:cuevan_app/models/cines_model.dart';
+import 'package:cuevan_app/utilities/get_cines.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
-class AdminHomeScreen extends StatelessWidget {
-  const AdminHomeScreen({Key? key}) : super(key: key);
+class AdminCinemasScreen extends StatefulWidget {
+   
+  const AdminCinemasScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Widget _menuItem({required String text,required IconData icono,required String routeName}) {
-      return GestureDetector(
-        onTap: () => Navigator.pushNamed(context, routeName),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                        color: const Color(0xffF0F0F0),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Icon(
-                      icono,
-                      size: 35,
-                      color: const Color(0xff2a292f),
-                    ),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        text,
-                        style: TextStyle(),
-                      )),
-                ],
-              ),
-              const Icon(Icons.arrow_forward_ios_rounded)
-            ],
-          ),
-        ),
-      );
-    }
+  State<AdminCinemasScreen> createState() => _AdminCinemasScreenState();
+}
 
-    Widget _menuList() {
-    return Container(
-      padding: const EdgeInsets.only(top: 1),
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          _menuItem(text: 'Users', icono: Icons.account_circle, routeName: 'admin_users'),
-          _menuItem(text: 'Tickets', icono: Icons.confirmation_num_outlined, routeName: 'admin_users'),
-          _menuItem(text: 'Cinemas', icono: Icons.store_mall_directory_rounded, routeName: 'admin_cinemas'),
-          _menuItem(text: 'Films', icono: Icons.video_camera_back_rounded, routeName: 'admin_users'),
-          _menuItem(text: 'Rooms', icono: Icons.airline_seat_recline_normal_rounded, routeName: 'admin_users'),
-        ],
-      ),
-    );
+class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
+
+  List<Cine> listOfCines = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    getCinesDB();
+    super.initState();
   }
-
+  
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -117,18 +77,86 @@ class AdminHomeScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.only(top: 10),
                     decoration: const BoxDecoration(
                         color: Color(0xffFFFFFF),
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(30),
                             topRight: Radius.circular(30))),
-                    child: _menuList(),
+                    child:isLoading ? null: _listCinemasView(),
                   ),
                 )
               ]),
         ),
       ),
     );
+  }
+
+  Widget _listCinemasView() {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemCount: listOfCines.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _listCineViewItem(index);
+      },
+    );
+  }
+
+  Widget _listCineViewItem(int index) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.account_circle_rounded,
+              ),
+              Container(
+                child: Text(
+                  listOfCines[index].nombre,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                margin: const EdgeInsets.only(left: 10),
+              )
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: const Color(0xffF0F0F0)),
+            child: Row(
+              children: [
+                GestureDetector(
+                    child: const Icon(Icons.edit),
+                    onTap: () => {}),
+                const SizedBox(
+                  width: 5,
+                ),
+                GestureDetector(
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onTap: () => {},
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void getCinesDB() async {
+    print('hola');
+    final response = await GetCines.getCines();
+    listOfCines = response.cines;
+    isLoading = false;
+    setState(() {});
   }
 }

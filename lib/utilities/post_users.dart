@@ -16,10 +16,7 @@ class PostUser {
       "firebase_uid": firebaseUid
     };
 
-    final response = await dio.post('http://192.168.0.8:4000/getcines', data: json.encode(userToSend));
+    final response = await dio.post('http://192.168.0.8:4000/insertuser', data: json.encode(userToSend));
     final responseJson = json.encode(response.data);
-    final ListUsers listUsers = ListUsers.fromJson(responseJson);
-
-    return listUsers;
   } 
 }

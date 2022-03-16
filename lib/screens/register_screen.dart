@@ -178,7 +178,10 @@ class _RegisterFormState extends State<_RegisterForm> {
       password: password1
     ).then((value) async {
       final uidUser = value.user?.uid;
-      await PostUser.postUser(formValues['name'], formValues['selectedDate'].toString(), formValues['email'], uidUser);
+      final month = formValues['selectedDate'].month < 10 ? '0${formValues['selectedDate'].month}' : formValues['selectedDate'].month;
+      final day = formValues['selectedDate'].day < 10 ? '0${formValues['selectedDate'].day}' : formValues['selectedDate'].day;
+      final fecha = '${formValues['selectedDate'].year}-$month-$day';
+      await PostUser.postUser('${formValues['name']} ${formValues['surname']}', fecha, formValues['email'], uidUser);
       _presentAlertDialog(title: '¡Usuario creado!', content: '🚀🚀🚀');
     }); //usercredentials    
     } on FirebaseAuthException catch( exception ) {
