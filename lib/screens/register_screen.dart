@@ -175,9 +175,7 @@ class _RegisterFormState extends State<_RegisterForm> {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email1,
       password: password1
-    ).then((value){
-      _presentAlertDialog(title: '¡Usuario creado!', content: '🚀🚀🚀');
-    }); //usercredentials    
+    ).then((value) => print(value)); //usercredentials
     } on FirebaseAuthException catch( exception ) {
       print(exception.code);
       switch (exception.code){
@@ -197,7 +195,7 @@ class _RegisterFormState extends State<_RegisterForm> {
       content: Text(content),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, 'Cancel'),
           child: const Text('Ok')
         )
       ],

@@ -125,8 +125,8 @@ class _LoginFormState extends State<_LoginForm> {
               onPressed: () async {
                 formKey.currentState?.save();
                 print(formValues['email']);
-                await _signIn(formValues['email'], formValues['password']);
-                //Navigator.pushNamed(context, 'admin_home');
+                //await _signIn(formValues['email'], formValues['password']);
+                Navigator.pushNamed(context, 'admin_home');
               },
               style: ButtonStyle(
                   backgroundColor:
@@ -154,12 +154,12 @@ class _LoginFormState extends State<_LoginForm> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email1, password: password1
               // ignore: avoid_print
-              );
-      Navigator.pushNamed(context, 'home_page'); //usercredentials
+              )
+          .then((value) => print(value)); //usercredentials
     } on FirebaseAuthException catch (exception) {
-      print('perro${exception.code}');
+      print(exception.code);
       switch (exception.code) {
-        case 'invalid-email': //show alertDialog cuando el email ya esté en uso
+        case 'email-invalid': //show alertDialog cuando el email ya esté en uso
           _presentAlertDialog(
               title: 'Email incorrecto',
               content: 'El email no esta registrado. 😢');

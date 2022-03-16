@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  const InputField({
-    Key? key,
-    required this.hintText,
-    this.sufixIcon,
-    required this.obscureText,
-    this.validator,
-    this.onSaved,
-    this.onChanged,
-    this.keyboardType,
-    this.initialValue,
-    this.labelText,
-  }) : super(key: key);
+  const InputField(
+      {Key? key,
+      required this.hintText,
+      this.sufixIcon,
+      required this.obscureText,
+      this.validator,
+      this.onSaved,
+      this.onChanged,
+      this.keyboardType})
+      : super(key: key);
 
   final String hintText;
   final IconData? sufixIcon;
@@ -21,8 +19,6 @@ class InputField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final TextInputType? keyboardType;
-  final String? initialValue;
-  final String? labelText;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +26,7 @@ class InputField extends StatelessWidget {
       validator: validator,
       onSaved: onSaved,
       obscureText: obscureText,
-      initialValue: initialValue,
       decoration: InputDecoration(
-          label: labelText != null
-              ? Container(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 18),
-                  decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20),
-                    color: const Color.fromRGBO(244, 239, 248, 1),
-                    ),                                    
-                  child: Text(labelText!, style: const TextStyle(color: Color(0xffa239f1) ),))
-              : null,
           hintText: hintText,
           filled: true,
           hintStyle: const TextStyle(

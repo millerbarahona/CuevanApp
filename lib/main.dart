@@ -1,5 +1,5 @@
 import 'package:cuevan_app/router/app_routes.dart';
-import 'package:cuevan_app/screens/cinema_screen.dart';
+import 'package:cuevan_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: const CinemaScreen(),
+      home: const LoginScreen(),
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.getRoutes(),
     );
