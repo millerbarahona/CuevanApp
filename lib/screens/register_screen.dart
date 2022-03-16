@@ -1,3 +1,4 @@
+import 'package:cuevan_app/utilities/post_users.dart';
 import 'package:cuevan_app/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +176,9 @@ class _RegisterFormState extends State<_RegisterForm> {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email1,
       password: password1
-    ).then((value){
+    ).then((value) async {
+      final uidUser = value.user?.uid;
+      await PostUser.postUser(formValues['name'], formValues['selectedDate'].toString(), formValues['email'], uidUser);
       _presentAlertDialog(title: '¡Usuario creado!', content: '🚀🚀🚀');
     }); //usercredentials    
     } on FirebaseAuthException catch( exception ) {
