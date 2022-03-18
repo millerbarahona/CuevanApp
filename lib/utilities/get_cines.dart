@@ -9,7 +9,7 @@ class GetCines {
     final dio = Dio();
     //final url = Uri.http( baseUrl, 'getusers', {});
 
-    final response = await dio.get('http://192.168.0.8:4000/getcines');
+    final response = await dio.get('https://cuevanapp-backend.herokuapp.com/getcines');
     final responseJson = json.encode(response.data);
     final ListCines listCines = ListCines.fromJson(responseJson);
     

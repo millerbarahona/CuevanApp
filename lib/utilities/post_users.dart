@@ -16,7 +16,22 @@ class PostUser {
       "firebase_uid": firebaseUid
     };
 
-    final response = await dio.post('http://192.168.0.8:4000/insertuser', data: json.encode(userToSend));
+    final response = await dio.post('https://cuevanapp-backend.herokuapp.com/insertuser', data: json.encode(userToSend));
     final responseJson = json.encode(response.data);
-  } 
+  }
+
+  static getUserUid(String uid) async{
+    final dio = Dio();
+
+    final userToSend = {
+      "id": uid
+    };
+
+    final response = await dio.post('https://cuevanapp-backend.herokuapp.com/getsingleuser', data: json.encode(userToSend));
+    final responseJson = json.encode(response.data);
+    final User user = User.fromJson(responseJson);
+    
+    return user;
+  }
+
 }

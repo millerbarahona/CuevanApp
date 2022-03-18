@@ -1,11 +1,11 @@
 import 'package:cuevan_app/models/cines_model.dart';
+import 'package:cuevan_app/models/user_model.dart';
 import 'package:cuevan_app/utilities/delete_cines.dart';
 import 'package:cuevan_app/utilities/get_cines.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class AdminCinemasScreen extends StatefulWidget {
-   
   const AdminCinemasScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,7 +13,6 @@ class AdminCinemasScreen extends StatefulWidget {
 }
 
 class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
-
   List<Cine> listOfCines = [];
   bool isLoading = true;
 
@@ -22,7 +21,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
     getCinesDB();
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +57,12 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const Icon(
-                        Icons.menu_rounded,
-                        size: 40,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, 'add_cinema'),
+                        child: const Icon(
+                          Icons.add_circle_rounded,
+                          size: 40,
+                        ),
                       ),
                     ],
                   ),
@@ -85,7 +87,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(30),
                             topRight: Radius.circular(30))),
-                    child:isLoading ? null: _listCinemasView(),
+                    child: isLoading ? null : _listCinemasView(),
                   ),
                 )
               ]),
@@ -132,9 +134,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                 color: const Color(0xffF0F0F0)),
             child: Row(
               children: [
-                GestureDetector(
-                    child: const Icon(Icons.edit),
-                    onTap: () => {}),
+                GestureDetector(child: const Icon(Icons.edit), onTap: () => {}),
                 const SizedBox(
                   width: 5,
                 ),
@@ -157,7 +157,6 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
   }
 
   void getCinesDB() async {
-    print('hola');
     final response = await GetCines.getCines();
     listOfCines = response.cines;
     isLoading = false;
