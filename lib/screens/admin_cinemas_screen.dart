@@ -1,4 +1,5 @@
 import 'package:cuevan_app/models/cines_model.dart';
+import 'package:cuevan_app/utilities/delete_cines.dart';
 import 'package:cuevan_app/utilities/get_cines.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -142,7 +143,10 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                     Icons.delete,
                     color: Colors.red,
                   ),
-                  onTap: () => {},
+                  onTap: () async {
+                    await DeleteCines.deleteCines(listOfCines[index].id);
+                    getCinesDB();
+                  },
                 ),
               ],
             ),
