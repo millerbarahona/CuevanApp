@@ -123,11 +123,14 @@ class _LoginFormState extends State<_LoginForm> {
             validator: (String? value) => Validaciones.emptycase(value),
           ),
           Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                'Recover Password',
-                style: Theme.of(context).textTheme.caption,
-              )),
+            padding: const EdgeInsets.only(top: 10),
+            child: GestureDetector(
+                child: Text(
+                  'Recover Password',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                onTap: () => showrestorepasword()),
+          ),
           Container(
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
@@ -163,6 +166,61 @@ class _LoginFormState extends State<_LoginForm> {
         ],
       ),
     );
+  }
+
+  showrestorepasword() {
+    String inputvalue = '';
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('recuperar contraseña'),
+        content: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: const Color(0xffF0F0F0),
+          ),
+          width: double.infinity,
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    InputField(
+                      hintText: 'Email',
+                      sufixIcon: Icons.account_circle,
+                      obscureText: false,
+                      onSaved: (String? value) {
+                        formValues['email'] = value;
+                      },
+                      validator: (String? value) =>
+                          Validaciones.emptycase(value),
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          formKey.currentState?.save();
+                          validator();
+                          print(formValues['email']);
+                          await _recoverypass(formValues['email']);
+                        },
+                        child: const Text('Enviar'))
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future _recoverypass(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 
   Future _signIn(String email1, String password1) async {
