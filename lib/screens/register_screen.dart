@@ -1,7 +1,9 @@
 import 'package:cuevan_app/utilities/post_users.dart';
+import 'package:cuevan_app/utilities/validaciones.dart';
 import 'package:cuevan_app/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -74,6 +76,14 @@ class _RegisterFormState extends State<_RegisterForm> {
     'password': ''
   };
 
+  validator() {
+    if (formKey.currentState != null && formKey.currentState!.validate()) {
+      print("object");
+    } else {
+      print(" sssss");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -91,6 +101,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     onSaved: (String? value) {
                       formValues['name'] = value;
                     },
+                    validator: (String? value) => Validaciones.emptycase(value),
                   ),
                 ),
               ),
@@ -98,12 +109,13 @@ class _RegisterFormState extends State<_RegisterForm> {
                 child: Container(
                   padding: const EdgeInsets.only(left: 5),
                   child: InputField(
-                    hintText: 'Surname',
-                    obscureText: false,
-                    onSaved: (String? value) {
-                      formValues['surname'] = value;
-                    },
-                  ),
+                      hintText: 'Surname',
+                      obscureText: false,
+                      onSaved: (String? value) {
+                        formValues['surname'] = value;
+                      },
+                      validator: (String? value) =>
+                          Validaciones.emptycase(value)),
                 ),
               ),
             ],
@@ -116,6 +128,7 @@ class _RegisterFormState extends State<_RegisterForm> {
               onSaved: (String? value) {
                 formValues['email'] = value;
               },
+              validator: (String? value) => Validaciones.validemail(value),
             ),
           ),
           Container(
@@ -126,6 +139,7 @@ class _RegisterFormState extends State<_RegisterForm> {
               onSaved: (String? value) {
                 formValues['password'] = value;
               },
+              validator: (String? value) => Validaciones.validpassword(value),
             ),
           ),
           Container(
@@ -155,12 +169,13 @@ class _RegisterFormState extends State<_RegisterForm> {
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xffa239f1)),
+                      MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
                   elevation: MaterialStateProperty.all(0)),
               child: const Text('Register'),
               onPressed: () async {
                 formKey.currentState?.save();
                 print(formValues);
+                validator();
                 await _signUp(formValues['email'], formValues['password']);
               },
             ),
@@ -170,45 +185,52 @@ class _RegisterFormState extends State<_RegisterForm> {
     );
   }
 
-  Future _signUp(String email1, String password1) async { //metodo para el register
+  Future _signUp(String email1, String password1) async {
+    //metodo para el register
     FocusScope.of(context).unfocus();
-    try{
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email1,
-      password: password1
-    ).then((value) async {
-      final uidUser = value.user?.uid;
-      final month = formValues['selectedDate'].month < 10 ? '0${formValues['selectedDate'].month}' : formValues['selectedDate'].month;
-      final day = formValues['selectedDate'].day < 10 ? '0${formValues['selectedDate'].day}' : formValues['selectedDate'].day;
-      final fecha = '${formValues['selectedDate'].year}-$month-$day';
-      await PostUser.postUser('${formValues['name']} ${formValues['surname']}', fecha, formValues['email'], uidUser);
-      _presentAlertDialog(title: '¡Usuario creado!', content: '🚀🚀🚀');
-    }); //usercredentials    
-    } on FirebaseAuthException catch( exception ) {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email1, password: password1)
+          .then((value) async {
+        final uidUser = value.user?.uid;
+        final month = formValues['selectedDate'].month < 10
+            ? '0${formValues['selectedDate'].month}'
+            : formValues['selectedDate'].month;
+        final day = formValues['selectedDate'].day < 10
+            ? '0${formValues['selectedDate'].day}'
+            : formValues['selectedDate'].day;
+        final fecha = '${formValues['selectedDate'].year}-$month-$day';
+        await PostUser.postUser(
+            '${formValues['name']} ${formValues['surname']}',
+            fecha,
+            formValues['email'],
+            uidUser);
+        Fluttertoast.showToast(
+              msg: "El usuario ha sido creado 🚀🚀🚀",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              fontSize: 16.0);
+      }); //usercredentials
+    } on FirebaseAuthException catch (exception) {
       print(exception.code);
-      switch (exception.code){
+      switch (exception.code) {
         case 'email-already-in-use': //show alertDialog cuando el email ya esté en uso
-          _presentAlertDialog(title: 'Correo en uso', content: 'Este correo ya está en uso, usa uno distinto. 😢');
-          break;
-        case 'weak-password':
-          _presentAlertDialog(title: 'Contraseña demasiado facil', content: 'La contraseña debe contener por lo menos 6 caracteres.');
+          Fluttertoast.showToast(
+              msg: "El email ya esta en uso 😢😫",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              fontSize: 16.0);
           break;
       }
     }
   }
 
-  void _presentAlertDialog({ required String title, required String content}) {
-    showDialog(context: context, builder: (BuildContext _) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Ok')
-        )
-      ],
-    ));
-  }
 
   void _presentDatePicker() {
     showDatePicker(
