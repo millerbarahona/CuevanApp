@@ -304,12 +304,11 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     });
   }
 
-  _getUsersFromDB() async {
-    const String baseUrl = '192.168.0.8:4000/';
+  _getUsersFromDB() async {    
     final dio = Dio();
     //final url = Uri.http( baseUrl, 'getusers', {});
 
-    final response = await dio.get('http://192.168.0.8:4000/getusers');
+    final response = await dio.get('https://cuevanapp-backend.herokuapp.com/getusers');
     final responseJson = json.encode(response.data);
     final listUsers = ListUsers.fromJson(responseJson);
 
@@ -322,7 +321,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     final dio = Dio();
 
     final response = await dio.delete(
-      'http://192.168.0.8:4000/deleteuser',
+      'https://cuevanapp-backend.herokuapp.com/deleteuser',
       data: {"id": user.id},
     );
     final responseJson = json.encode(response.data);
@@ -344,7 +343,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
         : formValues['selectedDate'].day;
 
     final response = await dio.put(
-      'http://192.168.0.8:4000/updateuser',
+      'https://cuevanapp-backend.herokuapp.com/updateuser',
       data: {
         "id": user.id,
         "name": formValues['name'],

@@ -1,3 +1,4 @@
+import 'package:cuevan_app/utilities/redirect_login.dart';
 import 'package:cuevan_app/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -151,11 +152,14 @@ class _LoginFormState extends State<_LoginForm> {
     //metodo para el register
     FocusScope.of(context).unfocus();
     try {
-      await FirebaseAuth.instance
+      var credenciales = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email1, password: password1
               // ignore: avoid_print
               );
-      Navigator.pushNamed(context, 'home_page'); //usercredentials
+      final route = await RedirectLogin.redirectFromLogin(credenciales.user?.uid);
+      
+      Navigator.pushNamed(context, route);//usercredentials
+
     } on FirebaseAuthException catch (exception) {
       print('perro${exception.code}');
       switch (exception.code) {
