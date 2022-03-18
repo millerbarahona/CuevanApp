@@ -1,3 +1,4 @@
+import 'package:cuevan_app/screens/admin_cinemas_screen.dart';
 import 'package:cuevan_app/screens/admin_home.dart';
 import 'package:cuevan_app/screens/admin_users_screen.dart';
 import 'package:cuevan_app/screens/cinema_screen.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
       'home_page': (BuildContext context) => const CinemaScreen(),
       'admin_home': (BuildContext contex) => const AdminHomeScreen(),
       'admin_users': (BuildContext contex) => const AdminUsersScreen(),
+      'admin_cinemas': (BuildContext contex) => const AdminCinemasScreen(),
     };
   }
 }
