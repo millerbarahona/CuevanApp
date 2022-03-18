@@ -157,9 +157,9 @@ class _LoginFormState extends State<_LoginForm> {
               );
       Navigator.pushNamed(context, 'home_page'); //usercredentials
     } on FirebaseAuthException catch (exception) {
-      print(exception.code);
+      print('perro${exception.code}');
       switch (exception.code) {
-        case 'email-invalid': //show alertDialog cuando el email ya esté en uso
+        case 'invalid-email': //show alertDialog cuando el email ya esté en uso
           _presentAlertDialog(
               title: 'Email incorrecto',
               content: 'El email no esta registrado. 😢');

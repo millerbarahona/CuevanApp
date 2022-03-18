@@ -10,12 +10,12 @@ class User {
     required this.firebaseUid,
   });
 
-  int id;
-  String nombre;
-  DateTime fechaNacimiento;
-  String correo;
-  String rol;
-  String firebaseUid;
+  final int id;
+  final String nombre;
+  final DateTime fechaNacimiento;
+  final String correo;
+  final String rol;
+  final String firebaseUid;
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
 
