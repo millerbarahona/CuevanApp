@@ -1,30 +1,34 @@
 import 'package:cuevan_app/models/cines_model.dart';
+import 'package:cuevan_app/models/sala_cines_model.dart';
+import 'package:cuevan_app/models/salas_model.dart';
 import 'package:cuevan_app/models/user_model.dart';
 import 'package:cuevan_app/utilities/delete_cines.dart';
+import 'package:cuevan_app/utilities/delete_salas.dart';
 import 'package:cuevan_app/utilities/get_cines.dart';
-import 'package:cuevan_app/utilities/put_cines.dart';
+import 'package:cuevan_app/utilities/get_rooms_cines.dart';
+import 'package:cuevan_app/utilities/put_sala.dart';
 import 'package:cuevan_app/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class AdminCinemasScreen extends StatefulWidget {
-  const AdminCinemasScreen({Key? key}) : super(key: key);
+class AdminRoomsScreen extends StatefulWidget {
+  const AdminRoomsScreen({Key? key}) : super(key: key);
 
   @override
-  State<AdminCinemasScreen> createState() => _AdminCinemasScreenState();
+  State<AdminRoomsScreen> createState() => _AdminRoomsScreenState();
 }
 
-class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
-  List<Cine> listOfCines = [];
+class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
+  List<SalaCine> listOfSalas = [];
   bool isLoading = true;
   Map<String, dynamic> formValues = {
-    'name': 0,
+    'numero': 0,
   };
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    getCinesDB();
+    getSalasDB();
     super.initState();
   }
 
@@ -66,7 +70,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                               Container(
                                 margin: const EdgeInsets.only(left: 10),
                                 child: const Text(
-                                  'Cinemas',
+                                  'Rooms',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 20,
@@ -117,7 +121,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
   Widget _listCinemasView() {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      itemCount: listOfCines.length,
+      itemCount: listOfSalas.length,
       itemBuilder: (BuildContext context, int index) {
         return _listCineViewItem(index);
       },
@@ -137,7 +141,7 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
               ),
               Container(
                 child: Text(
-                  listOfCines[index].nombre,
+                  '${listOfSalas[index].nombre}, Sala ${listOfSalas[index].numeroSala}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -152,9 +156,8 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                 color: const Color(0xffF0F0F0)),
             child: Row(
               children: [
-                GestureDetector(child: const Icon(Icons.edit), onTap: (){
-                  _showEditUserDialog(listOfCines[index]);                  
-                }),
+                GestureDetector(child: const Icon(Icons.edit), onTap: () => _showEditUserDialog(listOfSalas[index])
+                ),
                 const SizedBox(
                   width: 5,
                 ),
@@ -164,8 +167,8 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
                     color: Colors.red,
                   ),
                   onTap: () async {
-                    await DeleteCines.deleteCines(listOfCines[index].id);
-                    getCinesDB();
+                    deleteSalas(listOfSalas[index].id);
+                    //getCinesDB();
                   },
                 ),
               ],
@@ -175,30 +178,32 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
       ),
     );
   }
-  
-  _showEditUserDialog(Cine cine) {
+
+  _showEditUserDialog(SalaCine sala) {
     return showDialog<String>(
         context: context,
         builder: (_) => AlertDialog(
               title: const Text('Edit a user data'),
-              content: _contentEditAlert(cine),
+              content: _contentEditAlert(sala),
               actions: [
                 ElevatedButton(
                     child: const Text(
                       'Save Changes',
                     ),
                     onPressed: () async{
-                      formKey.currentState?.save();                      
-                      await Putcines.putCines(cine.id, formValues['name'], cine);
+                      formKey.currentState?.save();
+                      print(formValues['numero']);
+                      await PutSalas.putSalas(sala.id, formValues['numero'], sala.id_cine);
                       Navigator.pop(context);
-                      getCinesDB();
+                      getSalasDB();
                     })
               ],
             ));
   }
 
-  Widget _contentEditAlert(Cine cine) {
-        
+  Widget _contentEditAlert(SalaCine sala) {
+    
+    formValues['numero'] = sala.numeroSala;
     return Container(
         height: 300,
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -207,12 +212,12 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
           child: Column(
             children: [
               InputField(
-                hintText: 'Nombre',
+                hintText: 'Numero',
                 obscureText: false,
-                initialValue: cine.nombre,
-                labelText: 'Nombre',
+                initialValue: sala.numeroSala,
+                labelText: 'Numero',
                 onSaved: (String? value) {
-                  formValues['name'] = value;
+                  formValues['numero'] = value;
                 },
               ),              
             ],
@@ -220,10 +225,15 @@ class _AdminCinemasScreenState extends State<AdminCinemasScreen> {
         ));
   }
 
-  void getCinesDB() async {
-    final response = await GetCines.getCines();
-    listOfCines = response.cines;
+  void getSalasDB() async {
+    final response = await GetRoomsCines.getRooms();
+    listOfSalas = response.salas;
     isLoading = false;
     setState(() {});
+  }
+
+  void deleteSalas(int id) async {
+    final response = await DeleteSalas.deleteSalas(id);
+    getSalasDB();
   }
 }

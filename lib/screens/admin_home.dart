@@ -58,7 +58,7 @@ class AdminHomeScreen extends StatelessWidget {
           _menuItem(text: 'Tickets', icono: Icons.confirmation_num_outlined, routeName: 'admin_users'),
           _menuItem(text: 'Cinemas', icono: Icons.store_mall_directory_rounded, routeName: 'admin_cinemas'),
           _menuItem(text: 'Films', icono: Icons.video_camera_back_rounded, routeName: 'admin_users'),
-          _menuItem(text: 'Rooms', icono: Icons.airline_seat_recline_normal_rounded, routeName: 'admin_users'),
+          _menuItem(text: 'Rooms', icono: Icons.airline_seat_recline_normal_rounded, routeName: 'admin_rooms'),
         ],
       ),
     );
